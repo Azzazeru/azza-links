@@ -1,33 +1,42 @@
 import type { Url } from '@prisma/client';
 import { PrismaClient } from '@prisma/client';
-import dns from 'dns/promises';
+import { promises } from 'dns';
 
 export const prisma = new PrismaClient();
+
+const MAX_URL_LENGTH = 2048;
+const ALLOWED_PROTOCOLS = ['http:', 'https:'];
 
 //* Services to Controllers
 
 export const createShortURLService = async (url: string): Promise<Url> => {
-  await existingUrlRecord(url);
+  try {
+    if (!url || url.length > MAX_URL_LENGTH) { throw new Error('Url debe ser menor a 2048 caracteres'); }
 
-  const parsedUrl: URL = new URL(url);
-  if (!parsedUrl) throw new Error('Invalid URL Format');
+    const normalizedUrl = ensureHttpProtocol(url);
 
-  const ip = await dns.resolve(parsedUrl.hostname);
-  if (!ip) throw new Error('Invalid Hostname');
+    if (!ALLOWED_PROTOCOLS.some(p => normalizedUrl.startsWith(p))) {
+      throw new Error('URL debe comenzar con http:// o https://');
+    }
 
-  let shortCode: string = generateRandomString();
+    const existingRecord = await existingUrlRecord(normalizedUrl);
+    if (existingRecord) return existingRecord;
 
-  const existingShortCode = await prisma.url.findFirst({ where: { shortCode } });
-  if (existingShortCode) shortCode = generateRandomString();
+    const { hostname } = new URL(normalizedUrl);
+    await promises.resolveSoa(hostname);
 
-  const newRecord = await prisma.url.create({
-    data: {
-      originalUrl: url,
-      shortCode,
-    },
-  });
+    const code = generateRandomString();
+    const result = await prisma.url.create({
+      data: {
+        originalUrl: normalizedUrl,
+        shortCode: code
+      }
+    })
 
-  return newRecord;
+    return result;
+  } catch (error) {
+    throw new Error(`Error al crear URL corta: ${error instanceof Error ? error.message : String(error)}`);
+  }
 };
 
 export const retrieveOriginalURLService = async (shortCode: string): Promise<string> => {
@@ -61,6 +70,17 @@ export const getURLStatisticsService = async (shortCode: string): Promise<Url> =
   return await getUrlRecord(shortCode);
 };
 
+export const getAllURLsService = async (): Promise<Url[]> => {
+  try {
+    const urls = await prisma.url.findMany({
+      orderBy: { createdAt: 'desc' },
+    });
+    return urls;
+  } catch (error) {
+    throw new Error(`Error al obtener URLs: ${error instanceof Error ? error.message : String(error)}`);
+  }
+};
+
 //? Some Functions to Services
 
 const existingUrlRecord = async (url: string): Promise<Url | null> => {
@@ -85,3 +105,8 @@ const getUrlRecord = async (shortCode: string): Promise<Url> => {
 
   return urlRecord;
 };
+
+const ensureHttpProtocol = (url: string): string => {
+  if (!url.startsWith('http://') && !url.startsWith('https://')) return 'http://' + url;
+  return url;
+}

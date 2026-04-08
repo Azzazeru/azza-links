@@ -3,6 +3,7 @@ import type { Request, Response } from 'express';
 import {
   createShortURLService,
   deleteShortURLService,
+  getAllURLsService,
   getURLStatisticsService,
   retrieveOriginalURLService,
   updateShortURLService,
@@ -80,6 +81,19 @@ export const getURLStatistics = async (_req: Request, res: Response): Promise<vo
   } catch (error: unknown) {
     if (error instanceof Error) {
       res.status(400).json({ error: error.message });
+    } else {
+      res.status(500).json({ error: 'Unknown error occurred' });
+    }
+  }
+};
+
+export const getAllShortURLs = async (_req: Request, res: Response): Promise<void> => {
+  try {
+    const urls = await getAllURLsService();
+    res.status(200).json(urls);
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      res.status(500).json({ error: error.message });
     } else {
       res.status(500).json({ error: 'Unknown error occurred' });
     }

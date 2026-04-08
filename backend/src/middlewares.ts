@@ -7,7 +7,10 @@ export const paramValidatorMiddleware = (
 ): void => {
   try {
     const shortCode: string = _req.params.shortCode;
-    if (!shortCode) res.status(400).json({ error: 'Short code is required' });
+    if (!shortCode) {
+      res.status(400).json({ error: 'Short code is required' });
+      return;
+    }
 
     res.locals.shortCode = shortCode;
 

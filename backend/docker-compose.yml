@@ -1,0 +1,17 @@
+services:
+  backend:
+    image: ghcr.io/azzazeru/azza-links/backend:latest
+    container_name: azza_links_container
+    restart: unless-stopped
+    ports:
+      - "${PORT}:${PORT}"
+    env_file: .env
+    deploy: 
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+        reservations: 
+          cpus: '0.25'
+          memory: 128M
+    command: sh -c "npx prisma migrate deploy && npm start"

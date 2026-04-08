@@ -1,0 +1,159 @@
+type: collection.insomnia.rest/5.0
+schema_version: "5.1"
+name: azza_links API
+meta:
+  id: wrk_b611513c31344ed4bf8e2df3df7a5f99
+  created: 1775522917302
+  modified: 1775522917302
+  description: ""
+collection:
+  - name: azza_links Endpoints
+    meta:
+      id: fld_c791290fd2cd4804b0f5f74308edf612
+      created: 1775522917304
+      modified: 1775522917304
+      sortKey: -1775522917304
+      description: Todos los endpoints de la API
+    children:
+      - url: "{{ base_url }}"
+        name: GET - Get All Short URLs
+        meta:
+          id: req_1914d22264f1454aa3afe77807e78455
+          created: 1712376000000
+          modified: 1712376000000
+          isPrivate: false
+          description: Obtener todos los links cortos creados
+          sortKey: -1775522917313
+        method: GET
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ base_url }}/abc123"
+        name: PUT - Update Short URL
+        meta:
+          id: req_3935deb55e04438a9e08ea3799e76a89
+          created: 1712376000000
+          modified: 1712376000000
+          isPrivate: false
+          description: Actualizar la URL original de un link corto existente
+          sortKey: -1775522917312
+        method: PUT
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "url": "https://www.ejemplo.com/nueva-url-actualizada"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ base_url }}/abc123"
+        name: GET - Redirect to Original URL
+        meta:
+          id: req_7d7bd6a63bc0483baaef780a02061414
+          created: 1712376000000
+          modified: 1712376000000
+          isPrivate: false
+          description: Redirige al URL original y incrementa contador
+          sortKey: -1775522917310
+        method: GET
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ base_url }}/abc123"
+        name: DELETE - Delete Short URL
+        meta:
+          id: req_7fa25172864e4ebfa4cb2d5eab31a152
+          created: 1712376000000
+          modified: 1712376000000
+          isPrivate: false
+          description: Eliminar un link corto (no se puede redirigir más)
+          sortKey: -1775522917314
+        method: DELETE
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ base_url }}"
+        name: POST - Create Short URL
+        meta:
+          id: req_c5a59b5ef59842ba9e2f6e60842df955
+          created: 1712376000000
+          modified: 1712376000000
+          isPrivate: false
+          description: Crear un nuevo link corto
+          sortKey: -1775522917305
+        method: POST
+        body:
+          mimeType: application/json
+          text: >-
+            {
+              "url": "https://www.ejemplo.com/una-url-muy-larga-que-queremos-acortar"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ base_url }}/abc123/stats"
+        name: GET - Get Statistics
+        meta:
+          id: req_feb96f5d89b84039955a62b64c582cc7
+          created: 1712376000000
+          modified: 1712376000000
+          isPrivate: false
+          description: Obtener estadísticas del link corto
+          sortKey: -1775522917312
+        method: GET
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+cookieJar:
+  name: Default Jar
+  meta:
+    id: jar_25bb0a8094856be630fbceef80d1b3cce8bf93ee
+    created: 1775522917317
+    modified: 1775522917317
+environments:
+  name: Base Environment
+  meta:
+    id: env_3e3e77514d0545718071ae8f46a739c9
+    created: 1712376000000
+    modified: 1712376000000
+    isPrivate: false
+  data:
+    base_url: http://localhost:3000/shorten
+    api_host: http://localhost:3000
