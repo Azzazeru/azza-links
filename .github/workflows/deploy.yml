@@ -77,6 +77,8 @@ jobs:
           key: ${{ secrets.VM_SSH_KEY}}
           script: |
             set -eu pipefail
+            sudo mkdir -p /opt/azza-links
+            sudo chown $USER:$USER /opt/azza-links
             cd /opt/azza-links
 
             cat <<'EOF' | sed 's/^[[:space:]]*//' > .env
