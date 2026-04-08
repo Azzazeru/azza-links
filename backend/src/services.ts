@@ -21,7 +21,11 @@ export const createShortURLService = async (url: string): Promise<Url> => {
     if (existingRecord) return existingRecord;
 
     const { hostname } = new URL(normalizedUrl);
-    await promises.resolveSoa(hostname);
+    try {
+      await promises.resolveSoa(hostname);
+    } catch (dnsError) {
+      console.warn(`DNS validation failed for ${hostname}:`, dnsError);
+    }
 
     const code = generateRandomString();
     const result = await prisma.url.create({
