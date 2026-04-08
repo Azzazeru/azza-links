@@ -60,6 +60,16 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Prepare folder
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VM_HOST }}
+          username: ${{ secrets.VM_USER }}
+          key: ${{ secrets.VM_SSH_KEY }}
+          script: |
+            sudo mkdir -p /opt/azza-links
+            sudo chown ${{secrets.VM_USER}}:${{secrets.VM_USER}} /opt/azza-links
+
       - name: Copy docker-compose to VM
         uses: appleboy/scp-action@v0.1.7
         with:
@@ -68,6 +78,7 @@ jobs:
           key: ${{ secrets.VM_SSH_KEY}}
           source: ./backend/docker-compose.yml
           target: /opt/azza-links/
+          strip_components: 1
 
       - name: Deploy over SSH
         uses: appleboy/ssh-action@v1.0.3
@@ -77,8 +88,6 @@ jobs:
           key: ${{ secrets.VM_SSH_KEY}}
           script: |
             set -eu pipefail
-            sudo mkdir -p /opt/azza-links
-            sudo chown $USER:$USER /opt/azza-links
             cd /opt/azza-links
 
             cat <<'EOF' | sed 's/^[[:space:]]*//' > .env
