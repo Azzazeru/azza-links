@@ -108,6 +108,7 @@ jobs:
 
             docker image prune -f
 
-            sleep 5
-            curl -f http://localhost:3000/ || exit 1
+            sleep 20
+            curl --retry 3 --retry-delay 5 -f http://localhost:3000/ || (docker logs azza_links_container && exit 1)
+            
             echo "Deployment successful!"
