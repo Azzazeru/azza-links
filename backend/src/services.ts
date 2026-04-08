@@ -1,8 +1,6 @@
 import type { Url } from '@prisma/client';
-import { PrismaClient } from '@prisma/client';
 import { promises } from 'dns';
-
-export const prisma = new PrismaClient();
+import { prisma } from './db';
 
 const MAX_URL_LENGTH = 2048;
 const ALLOWED_PROTOCOLS = ['http:', 'https:'];

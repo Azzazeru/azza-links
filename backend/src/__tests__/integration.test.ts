@@ -16,8 +16,7 @@ const mockPrisma = {
   },
 };
 
-jest.mock('../services', () => ({
-  ...jest.requireActual('../services'),
+jest.mock('../db', () => ({
   prisma: mockPrisma,
 }));
 
