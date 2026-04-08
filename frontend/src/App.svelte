@@ -340,9 +340,10 @@
 
                 {#if editingCode === link.shortCode}
                   <div class="editPanel">
-                    <label>Actualizar URL</label>
+                    <label for="edit-url-{link.shortCode}">Actualizar URL</label>
                     <div class="inputRow">
                       <input
+                        id="edit-url-{link.shortCode}"
                         type="url"
                         bind:value={editingUrl}
                         placeholder="https://nueva-url.com"
