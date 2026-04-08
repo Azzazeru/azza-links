@@ -86,9 +86,13 @@ jobs:
           host: ${{ secrets.VM_HOST }}
           username: ${{ secrets.VM_USER }}
           key: ${{ secrets.VM_SSH_KEY}}
+          command_timeout: 5m
           script: |
             set -euo pipefail
             cd /opt/azza-links
+
+            docker compose down --remove-orphans || true
+            docker system prune -af
 
             cat <<'EOF' | sed 's/^[[:space:]]*//' > .env
               DATABASE_URL=${{ secrets.DATABASE_URL }}
